@@ -1,0 +1,18 @@
+{
+    "name": "sunny/demo",
+    "autoload": {
+        "psr-4": {
+            "Demo\\": "libraries/",
+            "Demo\\Models\\": "libraries/Models"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sunny",
+            "email": "sunny.singh@lnpg.co.uk"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}
