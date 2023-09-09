@@ -4,17 +4,15 @@ namespace Demo\Models;
 
 class User extends Model
 {
+    protected string $table = 'users';
+    protected array $fillable = [ 'name' ];
     public function __construct()
     {
         parent::__construct();
-
-        $this->fillable = [
-            'name'
-        ];
     }
 
-    public function find()
+    public function find() : string
     {
-        parent::where( 'name', '=', 'test' )->find();
+        return parent::where( 'name', '=', 'Sunny Singh' )->where( 'name', '=', 'John' )->execute();
     }
 }

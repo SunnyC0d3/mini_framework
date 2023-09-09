@@ -4,15 +4,15 @@ namespace Demo\Models;
 
 use Demo\Database;
 use Exception;
+use PDO;
 
 class Model
 {
-    private $table;
-    protected $fillable = [];
+    protected string $table;
+    protected array $fillable = [];
 
-    private $db;
-
-    private $statement = [
+    protected Database $db;
+    protected array $statement = [
         'where' => []
     ];
 
@@ -21,75 +21,57 @@ class Model
         $this->db = new Database();
     }
 
-    protected function getTable() 
+    protected function where( string $column, string $operator, string $value ) : self
     {
-        return $this->table;
-    }
-    protected function setTable( $table ) 
-    {
-        $this->table = $table;
-    }
+        $this->validateWhereParameters( $column, $operator, $value );
 
-    protected function where( $column, $operator, $value )
-    {
-        if( empty( $column ) || empty( $operator ) || empty( $value ) )
-        {
-            throw new Exception( 'Conditions do not meet the function parameters.' );
-        }
-
-        if( ! in_array( $column, $this->fillable ) )
-        {
-            throw new Exception( 'The following column ' . $column .  ' is not part of the fillable.' );
-        }
-
-        $this->statement[ 'where' ] = [ 'column' => $column,  'operator' => $operator,  'value' => $value ];
+        $this->statement[ 'where' ][] = compact( 'column', 'operator', 'value' );
 
         return $this;
     }
 
-    protected function find()
+    protected function execute() : string
     {
         return $this->buildWhereStatement();
-        //$this->db->query( 'SELECT *' )
     }
 
-    private function buildWhereStatement()
+    // protected function execute() : array
+    // {
+    //     $query = $this->buildQuery();
+    //     return $this->db->query( $query )->get();
+    // }
+
+    private function buildQuery() : string
     {
-        $whereStatement = '';
-        $addAnd = false;
+        $whereStatement = $this->buildWhereStatement();
 
-        if( count( $this->statement[ 'where' ] ) > 0 )
-        {
-            $whereStatement = ' WHERE ';
+        return 'SELECT * FROM ' . $this->table . $whereStatement;
+    }
 
-            foreach( $this->statement[ 'where' ] as $query )
-            {
-                if ( $addAnd ) 
-                {
-                    $whereStatement .= ' AND ';
-                }
-
-                $whereStatement .= $query[ 'column' ] . $query[ 'operator' ] . $query[ 'value' ];
-
-                $addAnd = true;
-            }
-
-            return $whereStatement;
+    private function buildWhereStatement() : string
+    {
+        if ( empty( $this->statement['where'] ) ) {
+            return '';
         }
 
-        return $whereStatement;
+        $whereConditions = [];
+        foreach ( $this->statement[ 'where' ] as $query ) {
+            $whereConditions[] = "{$query[ 'column' ]} {$query[ 'operator' ]} '{$query[ 'value' ]}'";
+        }
+
+        return ' WHERE ' . implode(' AND ', $whereConditions);
+    }
+
+    private function validateWhereParameters(string $column, string $operator, string $value) : void
+    {
+        if ( empty( $column ) || empty($operator) || empty($value) ) 
+        {
+            throw new Exception( 'Conditions do not meet the function parameters.' );
+        }
+
+        if ( !in_array( $column, $this->fillable ) ) 
+        {
+            throw new Exception( "The column '$column' is not part of the fillable." );
+        }
     }
 }
-
-/**
- * A Model should be able to connect to the correct table
- * 
- * A Model should be able to perform CRUD related operations related to its own Model
- * 
- * A Model should be able to validate rules before uploading or making interactions between database
- * 
- * Has the ability to select which columns are editable and remain hidden or untouched
- * 
- * User extends Model
- *  - Gets everything to do with Model and can get its own properties and methods
- */
