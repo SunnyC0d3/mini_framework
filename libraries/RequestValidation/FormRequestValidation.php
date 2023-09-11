@@ -15,9 +15,7 @@ class FormRequestValidation
         'email'
     ];
 
-    private $invalidation = [
-        
-    ];
+    private $invalidation = [];
 
     private $validated = false;
 
@@ -34,12 +32,12 @@ class FormRequestValidation
         $this->validateIncomingRequest( $this->customRules );
         $this->serialiseRules( $this->customRules );
 
+        $this->validated = true;
+
         foreach( $this->invalidation as $name => $records )
         {
             foreach( $records as $record )
             {
-                $this->validated = true;
-
                 if( $record[ 0 ] === false )
                 {
                     $this->validated = false;
