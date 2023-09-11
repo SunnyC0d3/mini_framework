@@ -59,7 +59,7 @@ class FormRequestValidation
             }
         }
 
-        var_dump( $temp_rules );
+        dd( $temp_rules );
     }
 
     private function validateRules( $rules )
@@ -83,21 +83,16 @@ class FormRequestValidation
         return call_user_func_array( [ $this, $rule ], [ $name ] );
     }
 
-    private function checkRequest( $name )
-    {
-        return isset( $_GET[ $name ] ) ?? isset( $_POST[ $name ] );
-    }
-
     private function required( $name )
     {
-        $request = $this->checkRequest( $name );
+        $request = checkRequest( $name );
 
         return empty( $request ) ? 'The ' . $name . ' is required.' : '';
     }
 
     private function string( $name )
     {
-        $request = $this->checkRequest( $name );
+        $request = checkRequest( $name );
         
         return ! is_string( $request ) ? $name . ' is not of type string.' : '';
     }

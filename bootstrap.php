@@ -1,12 +1,10 @@
 <?php
 
 require 'vendor/autoload.php';
+require 'functions.php';
 
 use Dotenv\Dotenv;
 use Demo\Router;
-
-const DIR = __DIR__;
-const BASE_PATH = __DIR__ . '/';
 
 $dotenv = Dotenv::createImmutable( DIR );
 $dotenv->load();
