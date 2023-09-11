@@ -21,7 +21,12 @@ class Model
         $this->db = new Database();
     }
 
-    protected function where( string $column, string $operator, string $value ) : self
+    public function find( $id ) : array
+    {
+        return $this->where( 'id', '=', $id )->execute();
+    }
+
+    public function where( string $column, string $operator, string $value ) : self
     {
         $this->validateWhereParameters( $column, $operator, $value );
 
@@ -30,16 +35,11 @@ class Model
         return $this;
     }
 
-    protected function execute() : string
+    protected function execute() : array
     {
-        return $this->buildWhereStatement();
+        $query = $this->buildQuery();
+        return $this->db->query( $query )->get();
     }
-
-    // protected function execute() : array
-    // {
-    //     $query = $this->buildQuery();
-    //     return $this->db->query( $query )->get();
-    // }
 
     private function buildQuery() : string
     {
@@ -59,10 +59,10 @@ class Model
             $whereConditions[] = "{$query[ 'column' ]} {$query[ 'operator' ]} '{$query[ 'value' ]}'";
         }
 
-        return ' WHERE ' . implode(' AND ', $whereConditions);
+        return ' WHERE ' . implode( ' AND ', $whereConditions );
     }
 
-    private function validateWhereParameters(string $column, string $operator, string $value) : void
+    private function validateWhereParameters( string $column, string $operator, string $value ) : void
     {
         if ( empty( $column ) || empty($operator) || empty($value) ) 
         {

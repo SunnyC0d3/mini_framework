@@ -6,4 +6,4 @@ use Demo\Models\User;
 
 $user = new User();
 
-var_dump( $user->find() );
+var_dump( $user->find( 3 ) );
