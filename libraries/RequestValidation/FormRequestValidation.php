@@ -42,7 +42,7 @@ class FormRequestValidation
     
     private function serialiseRules( $request )
     {
-        $temp_rules = [];
+        $invalidation = [];
 
         foreach( $request as $name => $unserialised_rules )
         {
@@ -50,16 +50,16 @@ class FormRequestValidation
 
             $rules = explode( '|', $unserialised_rules );
 
-            $temp_rules[ $name ] = [];
+            $invalidation[ $name ] = [];
 
             foreach( $rules as $rule )
             {
                 $this->validateInputsAgainstRules( $rule );
-                array_push( $temp_rules[ $name ], $this->callMethodRelatedToRule( $rule, $name ) );
+                array_push( $invalidation[ $name ], $this->callMethodRelatedToRule( $rule, $name ) );
             }
         }
 
-        dd( $temp_rules );
+        dd( $invalidation );
     }
 
     private function validateRules( $rules )
@@ -85,15 +85,21 @@ class FormRequestValidation
 
     private function required( $name )
     {
-        $request = checkRequest( $name );
-
-        return empty( $request ) ? 'The ' . $name . ' is required.' : '';
+        return empty( checkRequest( $name ) ) ? 'The ' . $name . ' is required.' : '';
     }
 
     private function string( $name )
     {
-        $request = checkRequest( $name );
-        
-        return ! is_string( $request ) ? $name . ' is not of type string.' : '';
+        return ! is_string( checkRequest( $name ) ) ? $name . ' is not of type string.' : '';
+    }
+
+    private function email( $name )
+    {
+        return ! filter_var( checkRequest( $name ), FILTER_VALIDATE_EMAIL ) ? $name . ' is not a valid email address.' : '';
+    }
+
+    private function number( $name )
+    {        
+        return ! is_numeric( checkRequest( $name ) ) ? $name . ' is not a valid number.' : '';
     }
 }

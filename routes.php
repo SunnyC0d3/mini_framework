@@ -11,5 +11,5 @@ $router->put( '/', [ new TestController(), 'put' ] );
 $validator = new FormRequestValidation();
 $validator->validate( [ 
     'make' => 'required|string',
-    'model' => 'required'
+    'model' => 'required|email'
 ] );
