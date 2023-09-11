@@ -4,7 +4,8 @@
         "psr-4": {
             "Demo\\": "libraries/",
             "Demo\\Models\\": "libraries/Models",
-            "Demo\\Controllers\\": "libraries/Controllers"
+            "Demo\\Controllers\\": "libraries/Controllers",
+            "Demo\\RequestValidation\\": "libraries/RequestValidation"
         }
     },
     "authors": [
