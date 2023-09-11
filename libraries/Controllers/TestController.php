@@ -2,20 +2,18 @@
 
 namespace Demo\Controllers;
 
+use Demo\RequestValidation\FormRequestValidation;
+
 class TestController 
 {
     public function index()
     {
-        echo "
-            <form action='/' method='POST' >
-                <input type='hidden' name='_method' value='DELETE' >
-                <input type='submit' value='DELETE' />
-            </form>
-        ";
-    }
+        $validator = new FormRequestValidation();
+        $validator->rules( [
+            'make' => 'required|string'
+        ] );
+        $validator->validate();
 
-    public function delete()
-    {
-        echo 'delete';
+        var_dump( $validator->validated() );
     }
 }
