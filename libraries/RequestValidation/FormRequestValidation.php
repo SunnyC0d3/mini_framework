@@ -34,16 +34,18 @@ class FormRequestValidation
         $this->validateIncomingRequest( $this->customRules );
         $this->serialiseRules( $this->customRules );
 
-        foreach( $this->invalidation as $invalidated )
+        foreach( $this->invalidation as $name => $records )
         {
-            if( $invalidated[ 0 ] === false )
+            foreach( $records as $record )
             {
-                $this->validated = false;
-                return;
+                $this->validated = true;
+
+                if( $record[ 0 ] === false )
+                {
+                    $this->validated = false;
+                }
             }
         }
-
-        $this->validated = true;
     }
 
     public function validated()
@@ -129,31 +131,31 @@ class FormRequestValidation
 
     private function required( $name )
     {
-        array_push( $this->invalidation[ $name ], empty( checkRequest( $name ) ) ? [ 'false', 'The ' . $name . ' is required.' ] : [ 'true', checkRequest( $name ) ] );
+        array_push( $this->invalidation[ $name ], empty( checkRequest( $name ) ) ? [ false, 'The ' . $name . ' is required.' ] : [ true, checkRequest( $name ) ] );
     }
 
     private function string( $name )
     {
-        array_push( $this->invalidation[ $name ], ! is_string( checkRequest( $name ) ) ? [ 'false', $name . ' is not of type string.' ] : [ 'true', htmlspecialchars( checkRequest( $name ), ENT_QUOTES, 'UTF-8' ) ] );
+        array_push( $this->invalidation[ $name ], ! is_string( checkRequest( $name ) ) ? [ false, $name . ' is not of type string.' ] : [ true, htmlspecialchars( checkRequest( $name ), ENT_QUOTES, 'UTF-8' ) ] );
     }
 
     private function email( $name )
     {
-        array_push( $this->invalidation[ $name ], ! filter_var( checkRequest( $name ), FILTER_VALIDATE_EMAIL ) ? [ 'false', $name . ' is not a valid email address.' ] : [ 'true', filter_var( checkRequest( $name ), FILTER_VALIDATE_EMAIL ) ] );
+        array_push( $this->invalidation[ $name ], ! filter_var( checkRequest( $name ), FILTER_VALIDATE_EMAIL ) ? [ false, $name . ' is not a valid email address.' ] : [ true, filter_var( checkRequest( $name ), FILTER_VALIDATE_EMAIL ) ] );
     }
 
     private function number( $name )
     {        
-        array_push( $this->invalidation[ $name ], ! is_numeric( checkRequest( $name ) ) ? [ 'false', $name . ' is not a valid number.' ] : [ 'true', checkRequest( $name ) ] );
+        array_push( $this->invalidation[ $name ], ! is_numeric( checkRequest( $name ) ) ? [ false, $name . ' is not a valid number.' ] : [ true, checkRequest( $name ) ] );
     }
 
     private function max( $name, $value )
     {
-        array_push( $this->invalidation[ $name ], strlen( checkRequest( $name ) ) > $value ? [ 'false', $name . ' count is greater than ' . $value . '.' ] : [ 'true', checkRequest( $name ) ] );
+        array_push( $this->invalidation[ $name ], strlen( checkRequest( $name ) ) > $value ? [ false, $name . ' count is greater than ' . $value . '.' ] : [ true, checkRequest( $name ) ] );
     }
 
     private function min( $name, $value )
     {
-        array_push( $this->invalidation[ $name ], strlen( checkRequest( $name ) ) < $value ? [ 'false', $name . ' count is less than ' . $value . '.' ] : [ 'true', checkRequest( $name ) ] );
+        array_push( $this->invalidation[ $name ], strlen( checkRequest( $name ) ) < $value ? [ false, $name . ' count is less than ' . $value . '.' ] : [ true, checkRequest( $name ) ] );
     }
 }

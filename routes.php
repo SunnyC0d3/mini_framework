@@ -9,7 +9,9 @@ $router->patch( '/', [ new TestController(), 'patch' ] );
 $router->put( '/', [ new TestController(), 'put' ] );
 
 $validator = new FormRequestValidation();
-$validator->validate( [ 
-    'make' => 'min:255',
-    'model' => 'required|number'
+$validator->rules( [
+    'make' => 'required|string'
 ] );
+$validator->validate();
+
+var_dump( $validator->validated() );
