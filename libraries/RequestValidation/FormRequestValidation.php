@@ -19,18 +19,37 @@ class FormRequestValidation
         
     ];
 
+    private $validated = false;
+
+    private $customRules = [];
+
     public function __construct(){}
 
     public function rules( $request )
     {
-
+        $this->customRules = $request;
     }
-    public function validate( $request )
+    public function validate()
     {
-        $this->validateIncomingRequest( $request );
-        $this->serialiseRules( $request );
+        $this->validateIncomingRequest( $this->customRules );
+        $this->serialiseRules( $this->customRules );
+
+        foreach( $this->invalidation as $invalidated )
+        {
+            if( $invalidated[ 0 ] === false )
+            {
+                $this->validated = false;
+                return;
+            }
+        }
+
+        $this->validated = true;
     }
 
+    public function validated()
+    {
+        return $this->validated;
+    }
     private function validateIncomingRequest( $request )
     {
         if( empty( $request ) )
@@ -60,8 +79,6 @@ class FormRequestValidation
                 $this->callMethodRelatedToRule( $this->colonKeyCheck( $rule ), $name, $this->colonValueCheck( $rule ) );
             }
         }
-
-        dd( $this->invalidation );
     }
 
     private function validateRules( $rules )
