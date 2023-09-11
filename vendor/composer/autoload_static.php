@@ -30,6 +30,8 @@ class ComposerStaticInita442672ed3490d464a87d0693418a122
         'D' => 
         array (
             'Dotenv\\' => 7,
+            'Demo\\Models\\' => 12,
+            'Demo\\Controllers\\' => 17,
             'Demo\\' => 5,
         ),
     );
@@ -58,6 +60,14 @@ class ComposerStaticInita442672ed3490d464a87d0693418a122
         'Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
+        'Demo\\Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/libraries/Models',
+        ),
+        'Demo\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/libraries/Controllers',
         ),
         'Demo\\' => 
         array (
