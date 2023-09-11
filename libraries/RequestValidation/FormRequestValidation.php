@@ -55,7 +55,7 @@ class FormRequestValidation
             foreach( $rules as $rule )
             {
                 $this->validateInputsAgainstRules( $rule );
-                array_push( $invalidation[ $name ], $this->callMethodRelatedToRule( $rule, $name ) );
+                array_push( $invalidation[ $name ], $this->callMethodRelatedToRule( $this->colonKeyCheck( $rule ), $name, $this->colonValueCheck( $rule ) ) );
             }
         }
 
@@ -72,14 +72,39 @@ class FormRequestValidation
 
     private function validateInputsAgainstRules( $rule )
     {
+        $rule = $this->colonKeyCheck( $rule );
+
         if( ! in_array( $rule, $this->rules ) )
         {
             throw new Exception( $rule . ' key specified is not covered in the rules.' );
         }
     }
 
-    private function callMethodRelatedToRule( $rule, $name )
+    private function colonKeyCheck( $rule )
     {
+        if( strpos( $rule, ':' ) === false )
+        {
+            return $rule;
+        }
+
+        return explode( ':', $rule )[ 0 ];
+    }
+
+    private function colonValueCheck( $rule )
+    {
+        if( strpos( $rule, ':' ) === false )
+        {
+            return;
+        }
+
+        return explode( ':', $rule )[ 1 ];
+    }
+
+    private function callMethodRelatedToRule( $rule, $name, $optionalValue = '' )
+    {
+        if( $optionalValue !== '' )
+            return call_user_func_array( [ $this, $rule ], [ $name, $optionalValue ] );
+
         return call_user_func_array( [ $this, $rule ], [ $name ] );
     }
 
@@ -101,5 +126,15 @@ class FormRequestValidation
     private function number( $name )
     {        
         return ! is_numeric( checkRequest( $name ) ) ? $name . ' is not a valid number.' : '';
+    }
+
+    private function max( $name, $value )
+    {
+        return strlen( checkRequest( $name ) ) > $value ? $name . ' count is greater than ' . $value . '.' : '';
+    }
+
+    private function min( $name, $value )
+    {
+        return strlen( checkRequest( $name ) ) < $value ? $name . ' count is less than ' . $value . '.' : '';
     }
 }

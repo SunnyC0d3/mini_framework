@@ -10,6 +10,6 @@ $router->put( '/', [ new TestController(), 'put' ] );
 
 $validator = new FormRequestValidation();
 $validator->validate( [ 
-    'make' => 'required|string',
-    'model' => 'required|email'
+    'make' => 'min:255',
+    'model' => 'required|number'
 ] );
