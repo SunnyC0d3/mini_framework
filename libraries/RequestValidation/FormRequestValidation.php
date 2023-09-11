@@ -4,12 +4,6 @@ namespace Demo\RequestValidation;
 
 use Exception;
 
-//Validation Rules for Requests, need to create a class for each type of request I am handling e.g. Test
-//TestRequest
-    //Just have some specified fields that needs to be checked and params that need to be checked against
-//Now when a controller is activated via route,
-    //Controller will automatically pick up the TestRequest and run that first before continuing
-
 class FormRequestValidation
 {
     private $rules = [
@@ -45,17 +39,34 @@ class FormRequestValidation
             throw new Exception( 'The request is not of type array.' );
         } 
     }
-
     
-    public function serialiseRules( $request )
+    private function serialiseRules( $request )
     {
+        $temp_rules = [];
+
         foreach( $request as $name => $unserialised_rules )
         {
+            $this->validateRules( $unserialised_rules );
+
             $rules = explode( '|', $unserialised_rules );
+
+            $temp_rules[ $name ] = [];
+
             foreach( $rules as $rule )
             {
                 $this->validateInputsAgainstRules( $rule );
+                array_push( $temp_rules[ $name ], $this->callMethodRelatedToRule( $rule, $name ) );
             }
+        }
+
+        var_dump( $temp_rules );
+    }
+
+    private function validateRules( $rules )
+    {
+        if( empty( $rules ) )
+        {
+            throw new Exception( 'No rules specified.' );
         }
     }
 
@@ -67,22 +78,27 @@ class FormRequestValidation
         }
     }
 
-    // private function checkIfRuleHasColon( $rule )
-    // {
-    //     if ( strpos( $rule, ':' ) !== false ) 
-    //     {
-    //         $values = explode( ':', $rule );
-    //     }
-    // }
-}
+    private function callMethodRelatedToRule( $rule, $name )
+    {
+        return call_user_func_array( [ $this, $rule ], [ $name ] );
+    }
 
-/**
- * $validator = new FormRequestValidation();
- * 
- * $validated = $validator->validate([
- *  'make' => 'required|string|min:1|max:255'
- * ]);
- * 
- * if( $validated )
- * 
- */
+    private function checkRequest( $name )
+    {
+        return isset( $_GET[ $name ] ) ?? isset( $_POST[ $name ] );
+    }
+
+    private function required( $name )
+    {
+        $request = $this->checkRequest( $name );
+
+        return empty( $request ) ? 'The ' . $name . ' is required.' : '';
+    }
+
+    private function string( $name )
+    {
+        $request = $this->checkRequest( $name );
+        
+        return ! is_string( $request ) ? $name . ' is not of type string.' : '';
+    }
+}
