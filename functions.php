@@ -1,5 +1,14 @@
 <?php
 
+function debugging()
+{
+    if( $_ENV[ 'DEBUG' ] !== 'false' )
+    {
+        error_reporting( E_ALL );
+        ini_set( 'display_errors', 1 );
+    }
+}
+
 function dir_path( $path = '' )
 {
     return __DIR__ . $path;
