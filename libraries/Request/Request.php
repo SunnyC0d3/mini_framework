@@ -28,7 +28,7 @@ class Request
 
     public function port()
     {
-        return parse_url( $this->host(), PHP_URL_PORT );
+        return parse_url( $this->url(), PHP_URL_PORT );
     }
 
     public function url()
