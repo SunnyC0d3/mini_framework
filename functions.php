@@ -19,10 +19,6 @@ function resources_path( $path = '' )
 {
     return base_path( 'resources/' . $path );
 }
-function checkRequest( $name )
-{
-    return isset( $_GET[ $name ] ) ?? isset( $_POST[ $name ] );
-}
 
 function dd( $error )
 {

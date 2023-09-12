@@ -5,7 +5,9 @@
             "Demo\\": "libraries/",
             "Demo\\Models\\": "libraries/Models",
             "Demo\\Controllers\\": "libraries/Controllers",
-            "Demo\\RequestValidation\\": "libraries/RequestValidation"
+            "Demo\\RequestValidation\\": "libraries/RequestValidation",
+            "Demo\\Request\\": "libraries/Request",
+            "Demo\\Rules\\": "libraries/Rules"
         }
     },
     "authors": [
