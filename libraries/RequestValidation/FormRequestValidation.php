@@ -7,10 +7,10 @@ use Demo\Rules\ValidateRulesBasedOnRequest;
 
 class FormRequestValidation
 {
-    private $validated = false;
+    protected $validated = false;
 
-    private $validatedObject = [];
-    private Rules $rules;
+    protected $validatedObject = [];
+    protected Rules $rules;
 
     public function __construct( Rules $rules = null )
     {
@@ -28,6 +28,7 @@ class FormRequestValidation
     {
         $this->rules->rules( $rules );
     }
+    
     public function validate()
     {
         $this->validatedObject = $this->rules->getValidatedRules();

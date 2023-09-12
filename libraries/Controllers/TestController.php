@@ -2,18 +2,14 @@
 
 namespace Demo\Controllers;
 
-use Demo\RequestValidation\FormRequestValidation;
+use Demo\RequestValidation\TestRequestValidation;
 
 class TestController 
 {
     public function index()
     {
-        $validator = new FormRequestValidation();
-        $validator->rules( [
-            'make' => 'required|string'
-        ] );
-        $validator->validate();
+        $validator = new TestRequestValidation();
 
-        var_dump( $validator->validated() );
+        var_dump( $validator->validate() );
     }
 }
