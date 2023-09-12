@@ -3,12 +3,17 @@
 namespace Demo;
 
 use Exception;
+use Demo\Request\Request;
 
 class Router
 {
     private $routes = [];
+    private Request $request;
 
-    public function __construct(){}
+    public function __construct()
+    {
+        $this->request = new Request();
+    }
 
     private function add( $method, $uri, $callable )
     {
@@ -53,7 +58,7 @@ class Router
     {
         foreach( $this->routes as $route )
         {
-            if( $route[ 'uri' ] === $_SERVER[ 'REQUEST_URI' ] && $route[ 'method' ] === ( $_POST[ '_method' ] ?? $_SERVER[ 'REQUEST_METHOD' ] ) )
+            if( $route[ 'uri' ] === $this->request->path() && $route[ 'method' ] === $this->request->serverMethod() )
             {
                 return call_user_func( [ $route[ 'callable' ][ 0 ], $route[ 'callable' ][ 1 ] ] );
             }

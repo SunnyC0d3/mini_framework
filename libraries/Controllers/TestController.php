@@ -3,13 +3,13 @@
 namespace Demo\Controllers;
 
 use Demo\RequestValidation\TestRequestValidation;
+use Demo\Request\Request;
 
 class TestController 
 {
     public function index()
     {
-        $validator = new TestRequestValidation();
-
-        var_dump( $validator->validate() );
+        $request = new Request();
+        var_dump( $request->params() );
     }
 }
