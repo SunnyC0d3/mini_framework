@@ -20,12 +20,12 @@ class Rules implements IRules
 
     protected $customRules = [];
 
-    public function rules( $rules )
+    public final function rules( $rules )
     {
         $this->customRules = $rules;
     }
 
-    public function getValidatedRules()
+    public final function getValidatedRules()
     {
         $this->serialiseRules( $this->customRules );
 
