@@ -10,6 +10,6 @@ class TestController
     public function index()
     {
         $request = new Request();
-        dd( $request->params() );
+        dd( $request->serverMethod() );
     }
 }

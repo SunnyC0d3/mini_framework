@@ -33,12 +33,19 @@ class Request
 
     public function url()
     {
-        return $this->https() . $this->host() . $this->path();
+        return $this->https() . $this->host() . $this->path() . '?' . parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
     }
 
     public function params()
     {
-        return parse_url( $this->url(), PHP_URL_QUERY );
+        $params = [];
+
+        foreach( explode( '&', parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY ) ) as $param )
+        {
+            $params[] = explode( '=', $param );
+        }
+
+        return $params;
     }
 
     public function serverMethod( $method = '_method' )
