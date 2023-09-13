@@ -40,7 +40,7 @@ class Request
     {
         $params = [];
 
-        foreach( explode( '&', parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY ) ) as $param )
+        foreach( explode( '&', parse_url( $this->url(), PHP_URL_QUERY ) ) as $param )
         {
             $params[] = explode( '=', $param );
         }
