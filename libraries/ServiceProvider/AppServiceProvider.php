@@ -23,11 +23,6 @@ class AppServiceProvider extends Container
             return new Request();
         });
 
-        $this->bind( 'database', function () 
-        {
-            return new Database();
-        });
-
         $this->bind( 'user', function() 
         {
             return new User( new Database() );

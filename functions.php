@@ -19,8 +19,10 @@ function base_path( $path = '' )
     return __DIR__ . '/' . $path;
 }
 
-function views_path( $path = '' )
+function views_path( $path = '', $attributes = [] )
 {
+    extract( $attributes );
+
     return base_path( 'views/' . $path );
 }
 
