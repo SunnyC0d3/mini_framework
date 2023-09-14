@@ -23,12 +23,11 @@ class Rules implements IRules
     public final function rules( $rules )
     {
         $this->customRules = $rules;
+        $this->serialiseRules( $this->customRules );
     }
 
     public final function getValidatedRules()
     {
-        $this->serialiseRules( $this->customRules );
-
         return $this->validatedRules;
     }
 

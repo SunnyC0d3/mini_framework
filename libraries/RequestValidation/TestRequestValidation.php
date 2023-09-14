@@ -2,13 +2,14 @@
 
 namespace Demo\RequestValidation;
 
-use Demo\RequestValidation\FormRequestValidation;
+use Demo\RequestValidation\FormValidation;
+use Demo\Rules\Rules;
 
-class TestRequestValidation extends FormRequestValidation
+class TestRequestValidation extends FormValidation
 {   
-    public function __construct()
+    public function __construct( Rules $rules )
     {
-        parent::__construct();
+        parent::__construct( $rules );
 
         $this->rules( [
             'make' => 'required|string'

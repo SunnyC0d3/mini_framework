@@ -8,9 +8,9 @@ class ValidateRulesBasedOnRequest extends Rules
 {
     protected Request $request;
 
-    public function __construct()
+    public function __construct( Request $request )
     {
-        $this->request = new Request();
+        $this->request = $request;
     }
 
     protected function required( $name )

@@ -16,9 +16,9 @@ class Model
         'orWhere' => []
     ];
 
-    public function __construct()
+    public function __construct( Database $database )
     {
-        $this->db = new Database();
+        $this->db = new $database;
     }
 
     public function find( $id ) : array

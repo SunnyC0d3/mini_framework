@@ -3,25 +3,17 @@
 namespace Demo\RequestValidation;
 
 use Demo\Rules\Rules;
-use Demo\Rules\ValidateRulesBasedOnRequest;
 
-class FormRequestValidation
+class FormValidation
 {
     protected $validated = false;
 
     protected $validatedObject = [];
     protected Rules $rules;
 
-    public function __construct( Rules $rules = null )
+    public function __construct( Rules $rules )
     {
-        if( $rules === null )
-        {
-            $this->rules = new ValidateRulesBasedOnRequest();
-        }
-        else
-        {
-            $this->rules = $rules;
-        }
+        $this->rules = $rules;
     }
 
     public function rules( $rules )

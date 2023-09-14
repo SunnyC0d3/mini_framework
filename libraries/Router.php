@@ -10,9 +10,9 @@ class Router
     private $routes = [];
     private Request $request;
 
-    public function __construct()
+    public function __construct( Request $request )
     {
-        $this->request = new Request();
+        $this->request = $request;
     }
 
     private function add( $method, $uri, $callable )
