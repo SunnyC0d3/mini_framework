@@ -2,7 +2,7 @@
 
 function debugging()
 {
-    if( $_ENV[ 'DEBUG' ] !== 'false' )
+    if( $_ENV[ 'DEBUG' ] !== 'false' && $_ENV[ 'DEBUG' ] === 'true' )
     {
         error_reporting( E_ALL );
         ini_set( 'display_errors', 1 );
