@@ -19,14 +19,14 @@ function base_path( $path = '' )
     return __DIR__ . '/' . $path;
 }
 
-function views_path( $path = '', $attributes = [] )
+function view_path( $path = '', $attributes = [] )
 {
     extract( $attributes );
 
     return base_path( 'views/' . $path );
 }
 
-function resources_path( $path = '' )
+function resource_path( $path = '' )
 {
     return base_path( 'resources/' . $path );
 }
