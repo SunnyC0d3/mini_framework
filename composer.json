@@ -8,7 +8,8 @@
             "Demo\\RequestValidation\\": "libraries/RequestValidation",
             "Demo\\Request\\": "libraries/Request",
             "Demo\\Rules\\": "libraries/Rules",
-            "Demo\\ServiceProvider\\": "libraries/ServiceProvider"
+            "Demo\\ServiceProvider\\": "libraries/ServiceProvider",
+            "Demo\\Middleware\\": "libraries/Middleware"
         }
     },
     "authors": [

@@ -4,15 +4,18 @@ namespace Demo;
 
 use Exception;
 use Demo\Request\Request;
+use Demo\Middleware\Middleware;
 
 class Router
 {
     private $routes = [];
     private Request $request;
+    private Middleware $middleware;
 
-    public function __construct( Request $request )
+    public function __construct( Request $request, Middleware $middleware )
     {
         $this->request = $request;
+        $this->middleware = $middleware;
     }
 
     private function add( $method, $uri, $callable )
@@ -20,7 +23,8 @@ class Router
         $this->routes[] = [
             'uri' => $uri,
             'method' => $method,
-            'callable' => $callable
+            'callable' => $callable,
+            'middleware' => null
         ];
 
         return $this;
@@ -54,12 +58,32 @@ class Router
         return $this->add( 'PUT', $uri, $callable );
     }
 
+    public function middleware( $middleware = [] )
+    {
+        if( ! is_array( $middleware ) )
+        {
+            throw new Exception( 'The middlewares need to be specified within an array.' );
+        }
+
+        $this->routes[ array_key_last( $this->routes ) ][ 'middleware' ] = $middleware;
+
+        return $this;
+    }
+
     public function route()
     {
         foreach( $this->routes as $route )
         {
             if( $route[ 'uri' ] === $this->request->path() && $route[ 'method' ] === $this->request->serverMethod() )
             {
+                if( ! empty( $route[ 'middleware' ] ) )
+                {
+                    foreach( $route[ 'middleware' ] as $middleware )
+                    {
+                        $this->middleware->resolve( $middleware );
+                    }
+                }
+
                 return call_user_func( [ $route[ 'callable' ][ 0 ], $route[ 'callable' ][ 1 ] ] );
             }
         }

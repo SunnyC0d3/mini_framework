@@ -8,6 +8,7 @@ use Demo\Request\Request;
 use Demo\Models\User;
 use Demo\Rules\ValidateRulesBasedOnRequest;
 use Demo\RequestValidation\FormValidation;
+use Demo\Middleware\MiddlewareLoader;
 
 class AppServiceProvider extends Container
 {
@@ -15,7 +16,7 @@ class AppServiceProvider extends Container
     {
         $this->bind( 'router', function () 
         {
-            return new Router( new Request() );
+            return new Router( new Request(), new MiddlewareLoader() );
         });
 
         $this->bind( 'request', function () 
