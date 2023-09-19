@@ -10,7 +10,7 @@ $dotenv->load();
 
 debugging();
 
-App::resolveBinding( 'user' )->where( 'id', '=', '1' )->where( 'id', '=', '1' )->update( [ 'id' => 'testing', 'name' => 'testing' ] );
+App::resolveBinding( 'user' )->where( 'id', '=', 1 )->where( 'id', '=', 1 )->update( [ 'id' => 'testing', 'name' => 'testing' ] );
 
 // $router = App::resolveBinding( 'router' );
 // $routes = require base_path( 'routes.php' );

@@ -177,7 +177,7 @@ class Model
 
         foreach ( $data as $key => $value ) {
 
-            $result[] =  $key . '=' . $value;
+            $result[] = "{$key} = '{$value}'";
         }
 
         return $result;
