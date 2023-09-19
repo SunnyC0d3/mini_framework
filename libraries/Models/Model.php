@@ -60,10 +60,10 @@ class Model
     {
         $this->validateUpdateParameters( $data );
 
-        dd( $this->buildUpdateQuery() . implode( ' AND ', $this->joinAssociativeArrayDataWithEqual( $data ) ) );
+        dd( $this->buildUpdateQuery( $data ) );
     }
 
-    private function buildUpdateQuery() : string
+    private function buildUpdateQuery( $data ) : string
     {
         $update = 'UPDATE ' . $this->table;
 
@@ -78,7 +78,7 @@ class Model
 
         $update .= !empty( $whereStatement ) ? ' WHERE ' . $whereStatement : '';
 
-        return $update .= ' SET ';
+        return $update .= ' SET ' . implode( ' AND ', $this->joinAssociativeArrayDataWithEqual( $data ) );
     }
 
     private function buildSelectQuery() : string
