@@ -53,10 +53,35 @@ class Model
 
     public function get() : array
     {
-        return $this->db->query( $this->buildQuery() )->get();
+        return $this->db->query( $this->buildSelectQuery() )->get();
     }
 
-    private function buildQuery() : string
+    public function update( $data ) 
+    {
+        $this->validateUpdateParameters( $data );
+
+        dd( $this->buildUpdateQuery() . implode( ' AND ', $this->joinAssociativeArrayDataWithEqual( $data ) ) );
+    }
+
+    private function buildUpdateQuery() : string
+    {
+        $update = 'UPDATE ' . $this->table;
+
+        $statements = [
+            'where' => [
+                $this->buildWhereStatement(),
+                $this->buildorWhereStatement()
+            ]
+        ];
+
+        $whereStatement = implode( ' OR ', array_filter( $statements[ 'where' ] ) );
+
+        $update .= !empty( $whereStatement ) ? ' WHERE ' . $whereStatement : '';
+
+        return $update .= ' SET ';
+    }
+
+    private function buildSelectQuery() : string
     {
         $select = 'SELECT * FROM ' . $this->table;
 
@@ -121,5 +146,40 @@ class Model
     private function validateorWhereParameters( string $column, string $operator, string $value ) : void
     {
         $this->validateWhereParameters( $column, $operator, $value );
+    }
+
+    private function validateUpdateParameters( $updateFields ) : void
+    {
+        if( empty( $updateFields ) )
+        {
+            throw new Exception( 'The parameter passed to update is empty.' );
+        }
+
+        if ( ! is_array( $updateFields ) ) 
+        {
+            throw new Exception( 'Make sure the parameter being passed to update is of type array, with key value pairs.' );
+        }
+
+        if( array_keys( $updateFields ) === range( 0, count( $updateFields ) - 1 ) )
+        {
+            throw new Exception( 'The array parameter passed is not of type associative array.' );
+        }
+
+        foreach( $updateFields as $field => $value )
+        {
+            $this->validateFillable( $field );
+        }
+    }
+
+    private function joinAssociativeArrayDataWithEqual( $data )
+    {
+        $result = [];
+
+        foreach ( $data as $key => $value ) {
+
+            $result[] =  $key . '=' . $value;
+        }
+
+        return $result;
     }
 }
