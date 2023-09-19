@@ -14,25 +14,20 @@ class AppServiceProvider extends Container
 {
     protected function register()
     {
-        $this->bind( 'router', function () 
-        {
-            return new Router( new Request(), new MiddlewareLoader() );
-        });
+        $services = [
+            'router' => new Router( new Request(), new MiddlewareLoader() ),
+            'request' => new Request(),
+            'user' => new User( new Database() ),
+            'request_validation' => new FormValidation( new ValidateRulesBasedOnRequest( new Request() ) )
+        ];
 
-        $this->bind( 'request', function () 
+        foreach( $services as $service => $dependencies )
         {
-            return new Request();
-        });
-
-        $this->bind( 'user', function() 
-        {
-            return new User( new Database() );
-        });
-
-        $this->bind( 'request_validation', function() 
-        {
-            return new FormValidation( new ValidateRulesBasedOnRequest( new Request() ) );
-        });
+            $this->bind( $service, function() use ( $dependencies )
+            {
+                return $dependencies;
+            });
+        }
     }
 
     public static function resolveBinding( $key )

@@ -10,6 +10,8 @@ $dotenv->load();
 
 debugging();
 
-$router = App::resolveBinding( 'router' );
-$routes = require base_path( 'routes.php' );
-$router->route();
+dd( App::resolveBinding( 'user' ) );
+
+// $router = App::resolveBinding( 'router' );
+// $routes = require base_path( 'routes.php' );
+// $router->route();
