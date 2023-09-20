@@ -56,27 +56,49 @@ class Model
         return $this->db->query( $this->buildSelectQuery() )->get();
     }
 
-    public function update( $data ) 
+    public function update( $data ) : array
     {
         $this->validateUpdateParameters( $data );
 
-        dd( $this->buildUpdateQuery( $data ) );
+        return $this->db->query( $this->buildUpdateQuery( $data ) )->get();
+    }
+
+    public function delete() : array
+    {
+        return $this->db->query( $this->buildDeleteQuery() )->get();
+    }
+
+    public function insert( $data ) : array
+    {
+        $this->validateInsertParameters( $data );
+
+        return $this->db->query( $this->buildInsertQuery( $data ) )->get();
+    }
+
+    private function buildInsertQuery( $data ) : string
+    {
+        $update = 'INSERT INTO ' . $this->table;
+
+        $columns = ' ( ' . implode( ', ', array_keys( $data )  ) . ' ) ';
+        $values = ' VALUES ( ' . implode( ', ', array_values( $data ) ) . ' ) ';
+
+        return $update . $columns . $values;
+    }
+
+    private function buildDeleteQuery() : string
+    {
+        $delete = 'DELETE FROM ' . $this->table;
+
+        $delete .= !empty( $this->joinWhereStatements() ) ? ' WHERE ' . $this->joinWhereStatements() : '';
+
+        return $delete;
     }
 
     private function buildUpdateQuery( $data ) : string
     {
         $update = 'UPDATE ' . $this->table;
 
-        $statements = [
-            'where' => [
-                $this->buildWhereStatement(),
-                $this->buildorWhereStatement()
-            ]
-        ];
-
-        $whereStatement = implode( ' OR ', array_filter( $statements[ 'where' ] ) );
-
-        $update .= !empty( $whereStatement ) ? ' WHERE ' . $whereStatement : '';
+        $update .= !empty( $this->joinWhereStatements() ) ? ' WHERE ' . $this->joinWhereStatements() : '';
 
         return $update .= ' SET ' . implode( ' AND ', $this->joinAssociativeArrayDataWithEqual( $data ) );
     }
@@ -85,16 +107,7 @@ class Model
     {
         $select = 'SELECT * FROM ' . $this->table;
 
-        $statements = [
-            'where' => [
-                $this->buildWhereStatement(),
-                $this->buildorWhereStatement()
-            ]
-        ];
-
-        $whereStatement = implode( ' OR ', array_filter( $statements[ 'where' ] ) );
-
-        $select .= !empty( $whereStatement ) ? ' WHERE ' . $whereStatement : '';
+        $select .= !empty( $this->joinWhereStatements() ) ? ' WHERE ' . $this->joinWhereStatements() : '';
 
         return $select;
     }
@@ -171,7 +184,30 @@ class Model
         }
     }
 
-    private function joinAssociativeArrayDataWithEqual( $data )
+    private function validateInsertParameters( $insertFields ) : void
+    {
+        if( empty( $insertFields ) )
+        {
+            throw new Exception( 'The parameter passed to insert is empty.' );
+        }
+
+        if ( ! is_array( $insertFields ) ) 
+        {
+            throw new Exception( 'Make sure the parameter being passed to insert is of type array, with key value pairs.' );
+        }
+
+        if( array_keys( $insertFields ) === range( 0, count( $insertFields ) - 1 ) )
+        {
+            throw new Exception( 'The array parameter passed is not of type associative array.' );
+        }
+
+        foreach( $insertFields as $field => $value )
+        {
+            $this->validateFillable( $field );
+        }
+    }
+
+    private function joinAssociativeArrayDataWithEqual( $data ) : array
     {
         $result = [];
 
@@ -181,5 +217,19 @@ class Model
         }
 
         return $result;
+    }
+
+    private function joinWhereStatements() : string
+    {
+        $statements = [
+            'where' => [
+                $this->buildWhereStatement(),
+                $this->buildorWhereStatement()
+            ]
+        ];
+
+        $whereStatement = implode( ' OR ', array_filter( $statements[ 'where' ] ) );
+
+        return $whereStatement;
     }
 }
