@@ -56,23 +56,23 @@ class Model
         return $this->db->query( $this->buildSelectQuery() )->get();
     }
 
-    public function update( $data ) : array
+    public function update( $data ) : void
     {
         $this->validateUpdateParameters( $data );
 
-        return $this->db->query( $this->buildUpdateQuery( $data ) )->get();
+        $this->db->query( $this->buildUpdateQuery( $data ) );
     }
 
-    public function delete() : array
+    public function delete() : void
     {
-        return $this->db->query( $this->buildDeleteQuery() )->get();
+        $this->db->query( $this->buildDeleteQuery() );
     }
 
-    public function insert( $data ) : array
+    public function insert( $data ) : void
     {
         $this->validateInsertParameters( $data );
 
-        return $this->db->query( $this->buildInsertQuery( $data ) )->get();
+        $this->db->query( $this->buildInsertQuery( $data ) );
     }
 
     private function buildInsertQuery( $data ) : string
@@ -80,7 +80,7 @@ class Model
         $update = 'INSERT INTO ' . $this->table;
 
         $columns = ' ( ' . implode( ', ', array_keys( $data )  ) . ' ) ';
-        $values = ' VALUES ( ' . implode( ', ', array_values( $data ) ) . ' ) ';
+        $values = ' VALUES ( ' . implode( ', ', $this->addQuotesToManyValues( array_values( $data ) ) ) . ' ) ';
 
         return $update . $columns . $values;
     }
@@ -98,9 +98,11 @@ class Model
     {
         $update = 'UPDATE ' . $this->table;
 
+        $update .= ' SET ' . implode( ' AND ', $this->joinAssociativeArrayDataWithEqual( $data ) );
+
         $update .= !empty( $this->joinWhereStatements() ) ? ' WHERE ' . $this->joinWhereStatements() : '';
 
-        return $update .= ' SET ' . implode( ' AND ', $this->joinAssociativeArrayDataWithEqual( $data ) );
+        return $update;
     }
 
     private function buildSelectQuery() : string
@@ -231,5 +233,18 @@ class Model
         $whereStatement = implode( ' OR ', array_filter( $statements[ 'where' ] ) );
 
         return $whereStatement;
+    }
+
+    private function addQuotesToManyValues( $data ) : array
+    {
+        $arr = [];
+
+        foreach( $data as $value )
+        {
+            $value = '\'' . $value . '\'';
+            $arr[] = $value;
+        }
+
+        return $arr;
     }
 }
