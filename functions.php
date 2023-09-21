@@ -38,3 +38,15 @@ function dd( $error )
     echo '</pre>';
     die();
 }
+
+function removePlurals( $input )
+{
+    foreach ( [ 's', 'es', 'ies' ] as $suffix ) 
+    {
+        if ( substr( $input, -strlen( $suffix ) ) === $suffix ) 
+        {
+            return substr( $input, 0, -strlen( $suffix ) );
+        }
+    }
+    return $input;
+}

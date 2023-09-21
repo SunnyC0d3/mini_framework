@@ -6,6 +6,7 @@ use Demo\Database;
 use Demo\Router;
 use Demo\Request\Request;
 use Demo\Models\User;
+use Demo\Models\Relationship;
 use Demo\Rules\ValidateRulesBasedOnRequest;
 use Demo\RequestValidation\FormValidation;
 use Demo\Middleware\MiddlewareLoader;
@@ -18,7 +19,8 @@ class AppServiceProvider extends Container
             'router' => new Router( new Request(), new MiddlewareLoader() ),
             'request' => new Request(),
             'user' => new User( new Database() ),
-            'request_validation' => new FormValidation( new ValidateRulesBasedOnRequest( new Request() ) )
+            'request_validation' => new FormValidation( new ValidateRulesBasedOnRequest( new Request() ) ),
+            'relationship' => new Relationship( new Database() )
         ];
 
         foreach( $services as $service => $dependencies )
