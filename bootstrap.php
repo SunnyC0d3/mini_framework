@@ -5,7 +5,7 @@ use Demo\ServiceProvider\AppServiceProvider as App;
 
 require 'functions.php';
 
-$dotenv = Dotenv::createImmutable( dir_path() );
+$dotenv = Dotenv::createImmutable(dir_path());
 $dotenv->load();
 
 debugging();
@@ -16,12 +16,14 @@ debugging();
  * Create Session Class
  * Create OAuth
  * Add types, descriptions to everything I have done
+ * Look at plugins to auto format
+ * Add strict
  */
 
- $relationship = App::resolveBinding( 'relationship' );
+$relationship = App::resolveBinding('relationship');
 
- $relationship->belongsTo( 'notes' );
- dd( $relationship->eagerLoad( 'users', 'notes' ) );
+$relationship->hasOne('notes');
+dd($relationship->eagerLoad('users', 'notes'));
 
 // $router = App::resolveBinding( 'router' );
 // $routes = require base_path( 'routes.php' );
