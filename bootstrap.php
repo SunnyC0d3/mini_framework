@@ -15,9 +15,8 @@ debugging();
  * Fix SQL injections
  * Create Session Class
  * Create OAuth
- * Add types, descriptions to everything I have done
- * Look at plugins to auto format
- * Add strict
+ * Add types/strict, descriptions to everything I have done
+ * Testing
  */
 
 $relationship = App::resolveBinding('relationship');
