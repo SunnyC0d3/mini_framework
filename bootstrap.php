@@ -21,7 +21,7 @@ debugging();
 
 $relationship = App::resolveBinding('relationship');
 
-$relationship->hasOne('notes');
+$relationship->hasMany('notes');
 dd($relationship->eagerLoad('users', 'notes'));
 
 // $router = App::resolveBinding( 'router' );
