@@ -61,14 +61,7 @@ class Relationship
 
     private function belongsToRelationship( $table1, $table2 )
     {
-        return $this->db->query( 'SELECT * FROM :table1 INNER JOIN :table2 ON  :table1ID = :table2ID',  
-            [
-                ':table1' => $table1,
-                ':table2' => $table2,
-                ':table1ID' => $table1 . '.id',
-                ':table2ID' => $table2 . '.' . removePlurals( $table1 ) . '_id',
-            ]
-        )->get();
+        return $this->db->query( "SELECT * FROM $table1 INNER JOIN $table2 ON  $table1.id = $table2.". removePlurals( $table1 )."_id" )->get();
     }
 
     private function hasOneRelationship( $table1, $table2 )
