@@ -11,28 +11,25 @@ class FormValidation
     protected $validatedObject = [];
     protected Rules $rules;
 
-    public function __construct( Rules $rules )
+    public function __construct(Rules $rules)
     {
         $this->rules = $rules;
     }
 
-    public function rules( $rules )
+    public function rules($rules)
     {
-        $this->rules->rules( $rules );
+        $this->rules->rules($rules);
     }
-    
+
     public function validate()
     {
         $this->validatedObject = $this->rules->getValidatedRules();
-        
+
         $this->validated = true;
 
-        foreach( $this->validatedObject as $name => $records )
-        {
-            foreach( $records as $record )
-            {
-                if( $record[ 0 ] === false )
-                {
+        foreach ($this->validatedObject as $name => $records) {
+            foreach ($records as $record) {
+                if ($record[0] === false) {
                     $this->validated = false;
                 }
             }

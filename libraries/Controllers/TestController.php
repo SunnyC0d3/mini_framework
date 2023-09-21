@@ -1,6 +1,7 @@
 <?php
 
 namespace Demo\Controllers;
+
 use Demo\ServiceProvider\AppServiceProvider as App;
 
 class TestController extends Controller
@@ -11,7 +12,7 @@ class TestController extends Controller
     {
         parent::__construct();
 
-        $this->validator = App::resolveBinding( 'request_validation' );
+        $this->validator = App::resolveBinding('request_validation');
     }
 
     public function index()

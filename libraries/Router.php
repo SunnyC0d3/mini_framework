@@ -12,13 +12,13 @@ class Router
     private Request $request;
     private Middleware $middleware;
 
-    public function __construct( Request $request, Middleware $middleware )
+    public function __construct(Request $request, Middleware $middleware)
     {
         $this->request = $request;
         $this->middleware = $middleware;
     }
 
-    private function add( $method, $uri, $callable )
+    private function add($method, $uri, $callable)
     {
         $this->routes[] = [
             'uri' => $uri,
@@ -30,106 +30,95 @@ class Router
         return $this;
     }
 
-    public function get( $uri, $callable )
+    public function get($uri, $callable)
     {
-        $this->validateRoute( 'GET', $uri, $callable );
+        $this->validateRoute('GET', $uri, $callable);
 
-        return $this->add( 'GET', $uri, $callable );
+        return $this->add('GET', $uri, $callable);
     }
 
-    public function delete( $uri, $callable )
+    public function delete($uri, $callable)
     {
-        $this->validateRoute( 'DELETE', $uri, $callable );
+        $this->validateRoute('DELETE', $uri, $callable);
 
-        return $this->add( 'DELETE', $uri, $callable );
+        return $this->add('DELETE', $uri, $callable);
     }
 
-    public function patch( $uri, $callable )
+    public function patch($uri, $callable)
     {
-        $this->validateRoute( 'PATCH', $uri, $callable );
+        $this->validateRoute('PATCH', $uri, $callable);
 
-        return $this->add( 'PATCH', $uri, $callable );
+        return $this->add('PATCH', $uri, $callable);
     }
 
-    public function put( $uri, $callable )
+    public function put($uri, $callable)
     {
-        $this->validateRoute( 'PUT', $uri, $callable );
+        $this->validateRoute('PUT', $uri, $callable);
 
-        return $this->add( 'PUT', $uri, $callable );
+        return $this->add('PUT', $uri, $callable);
     }
 
-    public function middleware( $middleware = [] )
+    public function middleware($middleware = [])
     {
-        if( ! is_array( $middleware ) )
-        {
-            throw new Exception( 'The middlewares need to be specified within an array.' );
+        if (!is_array($middleware)) {
+            throw new Exception('The middlewares need to be specified within an array.');
         }
 
-        $this->routes[ array_key_last( $this->routes ) ][ 'middleware' ] = $middleware;
+        $this->routes[array_key_last($this->routes)]['middleware'] = $middleware;
 
         return $this;
     }
 
     public function route()
     {
-        foreach( $this->routes as $route )
-        {
-            if( $route[ 'uri' ] === $this->request->path() && $route[ 'method' ] === $this->request->serverMethod() )
-            {
-                if( ! empty( $route[ 'middleware' ] ) )
-                {
-                    foreach( $route[ 'middleware' ] as $middleware )
-                    {
-                        $this->middleware->resolve( $middleware );
+        foreach ($this->routes as $route) {
+            if ($route['uri'] === $this->request->path() && $route['method'] === $this->request->serverMethod()) {
+                if (!empty($route['middleware'])) {
+                    foreach ($route['middleware'] as $middleware) {
+                        $this->middleware->resolve($middleware);
                     }
                 }
 
-                return call_user_func( [ $route[ 'callable' ][ 0 ], $route[ 'callable' ][ 1 ] ] );
+                return call_user_func([$route['callable'][0], $route['callable'][1]]);
             }
         }
     }
 
-    private function validateRoute( $method, $uri, $callable )
+    private function validateRoute($method, $uri, $callable)
     {
-        $this->validateMethod( $method );
-        $this->validateURI( $uri );
-        $this->validateCallable( $callable );
+        $this->validateMethod($method);
+        $this->validateURI($uri);
+        $this->validateCallable($callable);
     }
 
-    private function validateMethod( $method )
+    private function validateMethod($method)
     {
-        if ( empty( $method ) || ! is_string( $method ) ) 
-        {
-            throw new Exception( 'Type of method is not specified in the Route.' );
+        if (empty($method) || !is_string($method)) {
+            throw new Exception('Type of method is not specified in the Route.');
         }
     }
 
-    private function validateURI( $uri )
+    private function validateURI($uri)
     {
-        if ( empty( $uri ) || ! is_string( $uri ) ) 
-        {
-            throw new Exception( 'Type of URI is not specified in the Route.' );
+        if (empty($uri) || !is_string($uri)) {
+            throw new Exception('Type of URI is not specified in the Route.');
         }
     }
 
-    private function validateCallable( $callable )
+    private function validateCallable($callable)
     {
-        if( count( $callable ) === 2 && is_array( $callable ) )
-        {
-            if( ! is_object( $callable[ 0 ] ) )
-            {
-                throw new Exception( 'The first index should be of type Object in the Route.' );
+        if (count($callable) === 2 && is_array($callable)) {
+            if (!is_object($callable[0])) {
+                throw new Exception('The first index should be of type Object in the Route.');
             }
 
-            if( ! is_string( $callable[ 1 ] ) )
-            {
-                throw new Exception( 'The second index should be of type String in the Route.' );
+            if (!is_string($callable[1])) {
+                throw new Exception('The second index should be of type String in the Route.');
             }
         }
 
-        if( count( $callable ) !== 2 || ! is_array( $callable ) )
-        {
-            throw new Exception( 'The callable should be of type array with a callable function and a method name in the Route.' );
+        if (count($callable) !== 2 || !is_array($callable)) {
+            throw new Exception('The callable should be of type array with a callable function and a method name in the Route.');
         }
     }
 }

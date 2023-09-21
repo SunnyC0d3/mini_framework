@@ -2,64 +2,65 @@
 
 namespace Demo\Request;
 
-class Request 
+class Request
 {
-    public function __construct(){}
-
-    public function input( $name )
+    public function __construct()
     {
-        return $this->requestFromGETMethod( $name ) ?? $this->requestFromPOSTMethod( $name );
+    }
+
+    public function input($name)
+    {
+        return $this->requestFromGETMethod($name) ?? $this->requestFromPOSTMethod($name);
     }
 
     public function https()
     {
-        return isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] === 'on' ? 'https://' : 'http://';
+        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
     }
 
     public function host()
     {
-        return parse_url( $this->https() . $_SERVER[ 'HTTP_HOST' ], PHP_URL_HOST );
+        return parse_url($this->https() . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
     }
 
     public function path()
     {
-        return parse_url( $_SERVER[ 'REQUEST_URI' ], PHP_URL_PATH );
+        return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
 
     public function port()
     {
-        return parse_url( $this->url(), PHP_URL_PORT );
+        return parse_url($this->url(), PHP_URL_PORT);
     }
 
     public function url()
     {
-        return $this->https() . $this->host() . $this->path() . '?' . parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY );
+        return $this->https() . $this->host() . $this->path() . '?' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
     }
 
     public function params()
     {
         $params = [];
 
-        foreach( explode( '&', parse_url( $this->url(), PHP_URL_QUERY ) ) as $param )
-        {
-            $params[] = explode( '=', $param );
+        foreach (explode('&', parse_url($this->url(), PHP_URL_QUERY)) as $param) {
+            $params[] = explode('=', $param);
         }
 
         return $params;
     }
 
-    public function serverMethod( $method = '_method' )
+    public function serverMethod($method = '_method')
     {
-        return $_POST[ $method ] ?? $_SERVER[ 'REQUEST_METHOD' ];
+        return $_POST[$method] ?? $_SERVER['REQUEST_METHOD'];
     }
 
-    private function requestFromGETMethod( $name )
+    private function requestFromGETMethod($name)
     {
-        return isset( $_GET[ $name ] );
+        return isset($_GET[$name]);
     }
 
-    private function requestFromPOSTMethod( $name )
+    private function requestFromPOSTMethod($name)
     {
-        return isset( $_POST[ $name ] );
+        return isset($_POST[$name]);
     }
 }

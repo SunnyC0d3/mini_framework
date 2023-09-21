@@ -4,8 +4,8 @@ namespace Demo\Middleware;
 
 class MiddlewareLoader extends Middleware
 {
-    protected $MAP = 
-    [
-        'guest' => GuestMiddleware::class
-    ];
+    protected $MAP =
+        [
+            'guest' => GuestMiddleware::class
+        ];
 }

@@ -7,7 +7,8 @@ use Exception;
 
 class Rules implements IRules
 {
-    protected $rules = [
+    protected $rules = 
+    [
         'required',
         'min',
         'max',
@@ -20,10 +21,10 @@ class Rules implements IRules
 
     protected $customRules = [];
 
-    public final function rules( $rules )
+    public final function rules($rules)
     {
         $this->customRules = $rules;
-        $this->serialiseRules( $this->customRules );
+        $this->serialiseRules($this->customRules);
     }
 
     public final function getValidatedRules()
@@ -31,79 +32,72 @@ class Rules implements IRules
         return $this->validatedRules;
     }
 
-    protected function serialiseRules( $rules )
+    protected function serialiseRules($rules)
     {
-        $this->validateRulesObject( $rules );
+        $this->validateRulesObject($rules);
 
-        foreach( $rules as $name => $unserialised_rules )
-        {
-            $this->validateRules( $unserialised_rules );
+        foreach ($rules as $name => $unserialised_rules) {
+            $this->validateRules($unserialised_rules);
 
-            $this->validatedRules[ $name ] = [];
+            $this->validatedRules[$name] = [];
 
-            $rules = explode( '|', $unserialised_rules );
+            $rules = explode('|', $unserialised_rules);
 
-            foreach( $rules as $rule )
-            {
-                $this->validateInputsAgainstRules( $rule );
-                $this->callMethodRelatedToRule( $this->colonKeyCheck( $rule ), $name, $this->colonValueCheck( $rule ) );
+            foreach ($rules as $rule) {
+                $this->validateInputsAgainstRules($rule);
+                $this->callMethodRelatedToRule($this->colonKeyCheck($rule), $name, $this->colonValueCheck($rule));
             }
         }
     }
 
-    protected function validateRulesObject( $rules )
+    protected function validateRulesObject($rules)
     {
-        if( ! is_array( $rules ) )
-        {
-            throw new Exception( 'The rules specified are not of type array.' );
+        if (!is_array($rules)) {
+            throw new Exception('The rules specified are not of type array.');
         }
 
-        $this->validateRules( $rules );
+        $this->validateRules($rules);
     }
 
-    protected function validateRules( $rules )
+    protected function validateRules($rules)
     {
-        if( empty( $rules ) )
-        {
-            throw new Exception( 'The rules are empty.' );
+        if (empty($rules)) {
+            throw new Exception('The rules are empty.');
         }
     }
 
-    protected function validateInputsAgainstRules( $rule )
+    protected function validateInputsAgainstRules($rule)
     {
-        $rule = $this->colonKeyCheck( $rule );
+        $rule = $this->colonKeyCheck($rule);
 
-        if( ! in_array( $rule, $this->rules ) )
-        {
-            throw new Exception( $rule . ' key specified is not covered in the rules.' );
+        if (!in_array($rule, $this->rules)) {
+            throw new Exception($rule . ' key specified is not covered in the rules.');
         }
     }
 
-    protected function colonKeyCheck( $rule )
+    protected function colonKeyCheck($rule)
     {
-        if( strpos( $rule, ':' ) === false )
-        {
+        if (strpos($rule, ':') === false) {
             return $rule;
         }
 
-        return explode( ':', $rule )[ 0 ];
+        return explode(':', $rule)[0];
     }
 
-    protected function colonValueCheck( $rule )
+    protected function colonValueCheck($rule)
     {
-        if( strpos( $rule, ':' ) === false )
-        {
+        if (strpos($rule, ':') === false) {
             return;
         }
 
-        return explode( ':', $rule )[ 1 ];
+        return explode(':', $rule)[1];
     }
 
-    protected function callMethodRelatedToRule( $rule, $name, $optionalValue = '' )
+    protected function callMethodRelatedToRule($rule, $name, $optionalValue = '')
     {
-        if( $optionalValue !== '' )
-            return call_user_func_array( [ $this, $rule ], [ $name, $optionalValue ] );
+        if ($optionalValue !== '')
+            return call_user_func_array([$this, $rule], [$name, $optionalValue]);
 
-        return call_user_func_array( [ $this, $rule ], [ $name ] );
+        return call_user_func_array([$this, $rule], [$name]);
     }
 }
