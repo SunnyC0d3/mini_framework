@@ -17,9 +17,6 @@ debugging();
  * Testing
  */
 
-$user = App::resolveBinding('user');
-dd($user->with('notes')->with('customers')->get());
-
-// $router = App::resolveBinding( 'router' );
-// $routes = require base_path( 'routes.php' );
-// $router->route();
+$router = App::resolveBinding( 'router' );
+$routes = require base_path( 'routes.php' );
+$router->route();

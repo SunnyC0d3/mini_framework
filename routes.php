@@ -2,4 +2,4 @@
 
 use Demo\Controllers\TestController;
 
-$router->get('/testing', [new TestController(), 'index'])->middleware(['guest']);
+$router->get('/', [new TestController(), 'index'])->middleware(['guest']);
