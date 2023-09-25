@@ -4,7 +4,9 @@ namespace Demo\Middleware;
 
 class Middleware
 {
-    protected $MAP = [];
+    protected $MAP = [
+        'guest' => GuestMiddleware::class
+    ];
 
     public function resolve($key)
     {

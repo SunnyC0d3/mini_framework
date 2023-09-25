@@ -2,7 +2,9 @@
 
 namespace Demo\Middleware;
 
-class GuestMiddleware
+use Demo\Middleware\IMiddleware;
+
+class GuestMiddleware implements IMiddleware
 {
     public function handle()
     {

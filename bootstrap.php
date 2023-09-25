@@ -11,7 +11,6 @@ $dotenv->load();
 debugging();
 
 /**
- * Create Session Class
  * Create OAuth
  * Add types/strict, descriptions to everything I have done
  * Testing

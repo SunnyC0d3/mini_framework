@@ -10,14 +10,14 @@ use Demo\Models\User;
 use Demo\Models\Relationship;
 use Demo\Rules\ValidateRulesBasedOnRequest;
 use Demo\RequestValidation\FormValidation;
-use Demo\Middleware\MiddlewareLoader;
+use Demo\Middleware\Middleware;
 
 class AppServiceProvider extends Container
 {
     protected function register()
     {
         $services = [
-            'router' => new Router(new Request(), new MiddlewareLoader()),
+            'router' => new Router(new Request(), new Middleware()),
             'request' => new Request(),
             'user' => new User(new Database()),
             'request_validation' => new FormValidation(new ValidateRulesBasedOnRequest(new Request())),
