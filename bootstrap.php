@@ -11,18 +11,14 @@ $dotenv->load();
 debugging();
 
 /**
- * Create Relationships for Model
- * Fix SQL injections
  * Create Session Class
  * Create OAuth
  * Add types/strict, descriptions to everything I have done
  * Testing
  */
 
-$relationship = App::resolveBinding('relationship');
-
-$relationship->hasMany('notes');
-dd($relationship->eagerLoad('users', 'notes'));
+$user = App::resolveBinding('user');
+dd($user->with('notes')->with('customers')->get());
 
 // $router = App::resolveBinding( 'router' );
 // $routes = require base_path( 'routes.php' );

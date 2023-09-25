@@ -3,6 +3,7 @@
 namespace Demo\Models;
 
 use Demo\Database;
+use Demo\Models\Relationship;
 use Exception;
 
 class Model
@@ -11,8 +12,12 @@ class Model
     protected array $fillable = [];
 
     protected Database $db;
-    protected array $statement =
+
+    protected Relationship $relationship;
+
+    private array $statement =
         [
+            'with' => [],
             'where' => [],
             'orWhere' => []
         ];
@@ -20,6 +25,7 @@ class Model
     public function __construct(Database $database)
     {
         $this->db = new $database;
+        $this->relationship = new Relationship($database);
     }
 
     public function find($id): array
@@ -29,6 +35,13 @@ class Model
         }
 
         return $this->where('id', '=', $id)->get();
+    }
+
+    public function with($table2)
+    {
+        $this->statement['with'][] = $this->relationship->eagerLoad($this->table, $table2);
+
+        return $this;
     }
 
     public function where(string $column, string $operator, string $value): self
@@ -109,9 +122,19 @@ class Model
     {
         $select = 'SELECT * FROM ' . $this->table;
 
+        $select .= $this->joinWithStatements() ?? '';
         $select .= !empty($this->joinWhereStatements()) ? ' WHERE ' . $this->joinWhereStatements() : '';
 
         return $select;
+    }
+
+    private function buildWithStatement(): string
+    {
+        if (empty($this->statement['with'])) {
+            return '';
+        }
+
+        return implode(' ', $this->statement['with']);
     }
 
     private function buildWhereStatement(): string
@@ -209,6 +232,13 @@ class Model
         }
 
         return $result;
+    }
+
+    private function joinWithStatements(): string
+    {
+        $withStatement = $this->buildWithStatement();
+
+        return $withStatement;
     }
 
     private function joinWhereStatements(): string

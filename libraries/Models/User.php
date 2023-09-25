@@ -2,6 +2,8 @@
 
 namespace Demo\Models;
 
+use Demo\Database;
+
 class User extends Model
 {
     protected string $table = 'users';
@@ -10,4 +12,13 @@ class User extends Model
         'name',
         'email'
     ];
+
+    public function __construct(Database $db)
+    {
+        parent::__construct($db);
+
+        $this->relationship->belongsTo = [
+            'notes'
+        ];
+    }
 }
