@@ -9,7 +9,9 @@
             "Demo\\Request\\": "libraries/Request",
             "Demo\\Rules\\": "libraries/Rules",
             "Demo\\ServiceProvider\\": "libraries/ServiceProvider",
-            "Demo\\Middleware\\": "libraries/Middleware"
+            "Demo\\Middleware\\": "libraries/Middleware",
+            "Demo\\OAuth\\": "libraries/OAuth",
+            "Demo\\OAuth\\Entities": "libraries/OAuth/Entities"
         }
     },
     "authors": [
@@ -19,6 +21,7 @@
         }
     ],
     "require": {
-        "vlucas/phpdotenv": "^5.5"
+        "vlucas/phpdotenv": "^5.5",
+        "league/oauth2-server": "^8.5"
     }
 }

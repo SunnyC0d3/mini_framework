@@ -18,6 +18,11 @@ function base_path($path = '')
     return __DIR__ . '/' . $path;
 }
 
+function key_path($path = '')
+{
+    return base_path('storage/keys/' . $path);
+}
+
 function view_path($path = '', $attributes = [])
 {
     extract($attributes);
