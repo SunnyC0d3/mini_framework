@@ -19,9 +19,14 @@ class AuthorizationServer
     private $encryptionKey;
 
     public function __construct(ClientRepositoryInterface $clientRepository, AccessTokenRepositoryInterface $accessTokenRepository, ScopeRepositoryInterface $scopeRepository, ResponseTypeInterface $responseType = null) {
-        $this->privateKey = key_path('private.key');
+        $this->privateKey = key_path( 'private.key' );
         $this->encryptionKey = $_ENV['ENCRYPTION_KEY'];
 
         $this->server = new \League\OAuth2\Server\AuthorizationServer($clientRepository, $accessTokenRepository, $scopeRepository, $this->privateKey, $this->encryptionKey);
+
+        $this->server->enableGrantType(
+            new \League\OAuth2\Server\Grant\ClientCredentialsGrant(),
+            new \DateInterval('PT1H') // access tokens will expire after 1 hour
+        );
     }
 }

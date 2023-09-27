@@ -1,6 +1,6 @@
 <?php
 
-namespace OAuth2ServerExamples\Repositories;
+namespace Demo\OAuth;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
